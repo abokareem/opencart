@@ -1,3 +1,5 @@
 OpenCart With Cloudflare SSL Easy Install Script
 تركيب اتوماتيك لسكربت اوبن كرت مع شهادة https
-wget -qO oc_fresh_install.sh https://raw.githubusercontent.com/qadeertv/opencart/master/oc_fresh_install.sh && chmod u+x oc_fresh_install.sh && bash oc_fresh_install
+wget -qO oc_fresh_install https://raw.githubusercontent.com/qadeertv/opencart/master/oc_fresh_install.sh && chmod u+x oc_fresh_install.sh && bash oc_fresh_install
+
+
