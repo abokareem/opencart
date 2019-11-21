@@ -3,3 +3,85 @@ OpenCart With Cloudflare SSL Easy Install Script
 wget -qO oc_fresh_install https://raw.githubusercontent.com/qadeertv/opencart/master/oc_fresh_install.sh && chmod u+x oc_fresh_install.sh && bash oc_fresh_install
 
 
+تركيب سكربت متجر
+
+https://websiteforstudents.com/install-arastta-ecommerce-on-ubuntu-16-04-17-10-18-04-with-apache2-mariadb-and-php-7-1/
+
+sudo apt update
+sudo apt install apache2
+sudo apt-get install mariadb-server mariadb-client
+sudo mysql_secure_installation
+
+
+    Enter current password for root (enter for none): Just press the Enter
+    Set root password? [Y/n]: Y
+    New password: Enter password
+    Re-enter new password: Repeat password
+    Remove anonymous users? [Y/n]: Y
+    Disallow root login remotely? [Y/n]: Y
+    Remove test database and access to it? [Y/n]:  Y
+    Reload privilege tables now? [Y/n]:  Y
+
+
+sudo mysql -u root -p
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt install php7.1 libapache2-mod-php7.1 php7.2-common php7.1-sqlite3 php7.1-curl php7.1-intl php7.1-mbstring php7.1-mcrypt php7.1-xmlrpc php7.1-mysql php7.1-gd php7.1-xml php7.1-cli php7.1-zip
+sudo nano /etc/php/7.1/apache2/php.ini
+
+file_uploads = On
+allow_url_fopen = On
+short_open_tag = On
+memory_limit = 256M
+upload_max_filesize = 100M
+max_execution_time = 360
+date.timezone = America/Chicago
+
+sudo systemctl restart apache2.service
+sudo nano /var/www/html/phpinfo.php
+
+<?php phpinfo( ); ?>
+
+sudo mysql -u root -p
+CREATE DATABASE arastta;
+CREATE USER 'arasttauser'@'localhost' IDENTIFIED BY 'new_password_here';
+GRANT ALL ON arastta.* TO 'arasttauser'@'localhost' IDENTIFIED BY 'user_password_here' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+EXIT;
+
+cd /tmp && wget wget https://arastta.org/download.php?version=latest
+sudo mv 'download.php?version=latest' arastta.zip
+sudo mkdir /var/www/html/arastta
+sudo unzip arastta.zip -d /var/www/html/arastta
+
+
+sudo chown -R www-data:www-data /var/www/html/arastta/
+sudo chmod -R 755 /var/www/html/arastta/
+
+sudo nano /etc/apache2/sites-available/arastta.conf
+
+<VirtualHost *:80>
+     ServerAdmin admin@example.com
+     DocumentRoot /var/www/html/arastta
+     ServerName example.com
+
+     <Directory /var/www/html/arastta/>
+          Options FollowSymlinks
+          AllowOverride All
+          Require all granted
+     </Directory>
+
+     ErrorLog ${APACHE_LOG_DIR}/error.log
+     CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+
+sudo a2ensite arastta.conf
+sudo a2enmod rewrite
+sudo systemctl restart apache2.service
+
+
+
